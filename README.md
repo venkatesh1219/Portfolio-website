@@ -94,8 +94,11 @@ npm run dev
 | `NEXT_PUBLIC_GITHUB_USERNAME` | Username for live GitHub stats | Recommended |
 | `GITHUB_TOKEN` | Raises GitHub API rate limit at build | Optional |
 | `NEXT_PUBLIC_CONTACT_ENDPOINT` | Formspree/Resend endpoint for the form | Optional |
+| `ADMIN_USERNAME` / `ADMIN_PASSWORD` | Credentials for the `/admin` dashboard | For admin |
+| `DATABASE_URL` | Vercel Postgres (Neon) — blog CRUD + analytics | For admin |
 
 > Without a contact endpoint, the form gracefully falls back to a `mailto:` link.
+> Without `DATABASE_URL`, the blog shows the seed posts and the dashboard shows empty states — nothing breaks.
 
 ---
 
@@ -105,9 +108,10 @@ Everything you'll want to edit lives in **`lib/data.ts`** and **`lib/site.ts`**:
 
 - **Projects** → `projects[]` (title, tech stack, impact metrics, GitHub link, diagram key)
 - **Experience** → `experiences[]`
-- **Certifications** → `certifications[]`
+- **Education** → `education[]` + `learningFocus[]` (shown on `/certifications`)
 - **Skills** → `skills[]`
-- **Blog posts** → `blogPosts[]`
+- **Blog posts** → managed in the `/admin` dashboard once a database is connected;
+  `blogPosts[]` is the fallback seed used before then
 - **Name, links, email, resume URL** → `siteConfig` in `lib/site.ts`
 
 ### Assets to add in `public/`
@@ -118,6 +122,34 @@ Everything you'll want to edit lives in **`lib/data.ts`** and **`lib/site.ts`**:
 
 The favicon is generated automatically from `app/icon.svg`, and the social
 share image is generated on the fly at `/og` — no static OG image needed.
+
+---
+
+## 🔐 Admin dashboard (`/admin`)
+
+A password-protected admin at **`/admin`** with:
+
+- **Analytics** — visitor traffic (total / today / 7-day), a 14-day trend chart,
+  top pages, top referrers, and Core Web Vitals (LCP/INP/CLS, p75) — collected
+  first-party into your own database, plus **Vercel Web Analytics + Speed
+  Insights** reporting to the Vercel dashboards.
+- **Blog management** — create, edit, publish, and delete posts (Markdown body).
+  The public blog reads published posts from the database, falling back to the
+  seed posts in `lib/data.ts` when no DB is configured.
+
+### Enable it (2 steps)
+
+1. **Set credentials.** In Vercel → Settings → Environment Variables, add
+   `ADMIN_USERNAME` and `ADMIN_PASSWORD`. Sign in at `/admin/login`.
+2. **Add a database.** In Vercel → Storage → **Create Database → Postgres
+   (Neon)**, then link it to the project. Vercel injects `DATABASE_URL`
+   automatically. Redeploy — tables are created on first use.
+
+> The dashboard and blog both work **before** you add a database (empty
+> analytics + seed posts), so you can ship first and wire data later.
+
+Visitor and Web Vitals data is gathered by a lightweight first-party beacon
+(`/api/track`, `/api/vitals`); the `/admin` area is excluded from tracking.
 
 ---
 

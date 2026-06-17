@@ -4,9 +4,12 @@ import { PageHeader } from "@/components/page-header";
 import { CtaSection } from "@/components/cta-section";
 import { Badge } from "@/components/ui/badge";
 import { RevealGroup, RevealItem } from "@/components/motion";
-import { blogPosts } from "@/lib/data";
+import { getPublishedPosts, type Post } from "@/lib/db";
 import { buildMetadata } from "@/lib/seo";
 import { formatDate } from "@/lib/utils";
+
+// Revalidate hourly so newly published posts appear without a redeploy.
+export const revalidate = 3600;
 
 export const metadata = buildMetadata({
   title: "Blog",
@@ -15,12 +18,12 @@ export const metadata = buildMetadata({
     "Writing on cloud platform engineering, Kubernetes, GitOps, FinOps, and SRE by Venkatesh Sethumurugan.",
 });
 
-function blogJsonLd() {
+function blogJsonLd(posts: Post[]) {
   return {
     "@context": "https://schema.org",
     "@type": "Blog",
     name: "Venkatesh Sethumurugan — Blog",
-    blogPost: blogPosts.map((post) => ({
+    blogPost: posts.map((post) => ({
       "@type": "BlogPosting",
       headline: post.title,
       description: post.excerpt,
@@ -30,12 +33,13 @@ function blogJsonLd() {
   };
 }
 
-export default function BlogPage() {
+export default async function BlogPage() {
+  const blogPosts = await getPublishedPosts();
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogJsonLd()) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogJsonLd(blogPosts)) }}
       />
 
       <PageHeader

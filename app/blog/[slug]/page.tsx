@@ -1,22 +1,27 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Clock } from "lucide-react";
+import ReactMarkdown from "react-markdown";
 import { Badge } from "@/components/ui/badge";
 import { CtaSection } from "@/components/cta-section";
-import { blogPosts } from "@/lib/data";
+import { getPublishedPosts, getPublishedPostBySlug } from "@/lib/db";
 import { buildMetadata } from "@/lib/seo";
 import { formatDate } from "@/lib/utils";
 import { siteConfig } from "@/lib/site";
 
+export const revalidate = 3600;
+export const dynamicParams = true;
+
 type Params = { params: Promise<{ slug: string }> };
 
-export function generateStaticParams() {
-  return blogPosts.map((post) => ({ slug: post.slug }));
+export async function generateStaticParams() {
+  const posts = await getPublishedPosts();
+  return posts.map((post) => ({ slug: post.slug }));
 }
 
 export async function generateMetadata({ params }: Params) {
   const { slug } = await params;
-  const post = blogPosts.find((p) => p.slug === slug);
+  const post = await getPublishedPostBySlug(slug);
   if (!post) return buildMetadata({ title: "Not found", path: `/blog/${slug}` });
   return buildMetadata({
     title: post.title,
@@ -25,9 +30,12 @@ export async function generateMetadata({ params }: Params) {
   });
 }
 
-function articleJsonLd(slug: string) {
-  const post = blogPosts.find((p) => p.slug === slug)!;
-  return {
+export default async function BlogPostPage({ params }: Params) {
+  const { slug } = await params;
+  const post = await getPublishedPostBySlug(slug);
+  if (!post) notFound();
+
+  const articleJsonLd = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
     headline: post.title,
@@ -38,18 +46,12 @@ function articleJsonLd(slug: string) {
     author: { "@type": "Person", name: siteConfig.name, url: siteConfig.url },
     mainEntityOfPage: `${siteConfig.url}/blog/${post.slug}`,
   };
-}
-
-export default async function BlogPostPage({ params }: Params) {
-  const { slug } = await params;
-  const post = blogPosts.find((p) => p.slug === slug);
-  if (!post) notFound();
 
   return (
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd(slug)) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
       />
 
       <article className="container-balanced max-w-3xl pt-32 pb-12 sm:pt-40">
@@ -81,29 +83,21 @@ export default async function BlogPostPage({ params }: Params) {
           </span>
         </div>
 
-        <div className="prose-portfolio mt-8 space-y-5 text-pretty leading-relaxed text-muted-foreground">
-          <p className="text-lg text-foreground">{post.excerpt}</p>
-          <p>
-            This is a starter article stub. Replace this content with the full
-            post — or wire the blog up to MDX, a CMS, or Contentlayer. The data
-            model already exists in{" "}
-            <code className="rounded bg-secondary px-1.5 py-0.5 text-sm">
-              lib/data.ts
-            </code>
-            , so adding real content is a matter of dropping in the body.
+        <p className="mt-8 text-lg leading-relaxed text-foreground">{post.excerpt}</p>
+
+        {post.body ? (
+          <div className="markdown mt-6 space-y-4 leading-relaxed text-muted-foreground [&_a]:text-primary [&_a]:underline [&_code]:rounded [&_code]:bg-secondary [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:text-sm [&_h2]:mt-8 [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:text-foreground [&_h3]:mt-6 [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:text-foreground [&_li]:ml-5 [&_li]:list-disc [&_pre]:overflow-x-auto [&_pre]:rounded-lg [&_pre]:border [&_pre]:border-border [&_pre]:bg-card [&_pre]:p-4 [&_strong]:text-foreground">
+            <ReactMarkdown>{post.body}</ReactMarkdown>
+          </div>
+        ) : (
+          <p className="mt-6 leading-relaxed text-muted-foreground">
+            Full article coming soon. Manage this post&apos;s content from the{" "}
+            <Link href="/admin/posts" className="text-primary underline">
+              admin dashboard
+            </Link>
+            .
           </p>
-          <p>
-            Each post is statically generated at build time via{" "}
-            <code className="rounded bg-secondary px-1.5 py-0.5 text-sm">
-              generateStaticParams
-            </code>
-            , carries its own OpenGraph metadata, and emits{" "}
-            <code className="rounded bg-secondary px-1.5 py-0.5 text-sm">
-              BlogPosting
-            </code>{" "}
-            structured data for rich search results.
-          </p>
-        </div>
+        )}
       </article>
 
       <CtaSection />

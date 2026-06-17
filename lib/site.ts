@@ -4,7 +4,9 @@ export const siteConfig = {
   shortName: "Venkatesh S.",
   description:
     "Senior Cloud DevOps Engineer specializing in AWS, Kubernetes, Terraform, and GitOps. I design and run secure, cost-efficient, highly available platforms at scale.",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://venkatesh.dev",
+  url:
+    process.env.NEXT_PUBLIC_SITE_URL ??
+    "https://venkatesh-portfolio-website.vercel.app",
   ogImage: "/og",
   email: "venkateshaws22@gmail.com",
   phone: "+91 86080 51219",

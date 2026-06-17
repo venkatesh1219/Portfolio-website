@@ -1,10 +1,13 @@
 import type { MetadataRoute } from "next";
 import { siteConfig } from "@/lib/site";
-import { blogPosts } from "@/lib/data";
+import { getPublishedPosts } from "@/lib/db";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export const revalidate = 3600;
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = siteConfig.url;
   const now = new Date();
+  const blogPosts = await getPublishedPosts();
 
   const routes = [
     { path: "/", priority: 1 },
