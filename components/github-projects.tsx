@@ -28,9 +28,16 @@ const LANG_COLORS: Record<string, string> = {
 };
 
 // Honest fallback (real repos) so the section renders even if the API is rate-limited.
+// Repos to hide from the live grid (by lowercased name).
+const EXCLUDE = new Set(["portfolio-website", "ai-newsletter"]);
+
+// Honest fallback (real repos) so the section renders even if the API is rate-limited.
 const FALLBACK: Repo[] = [
-  { name: "Portfolio-website", description: "This portfolio — Next.js 15, TypeScript, Tailwind, with an analytics + blog admin.", html_url: "https://github.com/venkatesh1219/Portfolio-website", homepage: siteConfig.url, language: "TypeScript", fork: false, archived: false, stargazers_count: 0, forks_count: 0, pushed_at: "2026-06-17" },
-  { name: "ai-newsletter", description: "An AI-powered newsletter app.", html_url: "https://github.com/venkatesh1219/ai-newsletter", homepage: "https://ai-newsletter-peach.vercel.app", language: "TypeScript", fork: false, archived: false, stargazers_count: 0, forks_count: 0, pushed_at: "2026-05-01" },
+  { name: "aws-landing-zone-terraform", description: "Multi-account AWS landing zone with Terraform — TGW networking, central CloudTrail, SCP guardrails.", html_url: "https://github.com/venkatesh1219/aws-landing-zone-terraform", homepage: null, language: "HCL", fork: false, archived: false, stargazers_count: 0, forks_count: 0, pushed_at: "2026-06-19" },
+  { name: "eks-microservices-platform", description: "Production EKS platform — Terraform, reusable Helm chart, ArgoCD GitOps, HPA, blue-green.", html_url: "https://github.com/venkatesh1219/eks-microservices-platform", homepage: null, language: "HCL", fork: false, archived: false, stargazers_count: 0, forks_count: 0, pushed_at: "2026-06-19" },
+  { name: "gitops-cicd-platform", description: "GitOps + CI/CD with SonarCloud/Snyk gates and ArgoCD ApplicationSet promotion.", html_url: "https://github.com/venkatesh1219/gitops-cicd-platform", homepage: null, language: "Shell", fork: false, archived: false, stargazers_count: 0, forks_count: 0, pushed_at: "2026-06-19" },
+  { name: "observability-stack", description: "Prometheus SLO rules, Alertmanager → PagerDuty/Slack, Loki, Grafana, runbooks.", html_url: "https://github.com/venkatesh1219/observability-stack", homepage: null, language: "Shell", fork: false, archived: false, stargazers_count: 0, forks_count: 0, pushed_at: "2026-06-19" },
+  { name: "aws-cost-optimization", description: "FinOps toolkit — rightsizing & idle-resource reports, scheduler Lambda, budgets.", html_url: "https://github.com/venkatesh1219/aws-cost-optimization", homepage: null, language: "Python", fork: false, archived: false, stargazers_count: 0, forks_count: 0, pushed_at: "2026-06-19" },
   { name: "Docker-Jenkins-django", description: "DevOps pipeline: build a Docker image and push to Docker Hub via Jenkins.", html_url: "https://github.com/venkatesh1219/Docker-Jenkins-django", homepage: null, language: "JavaScript", fork: false, archived: false, stargazers_count: 0, forks_count: 0, pushed_at: "2026-03-01" },
 ];
 
@@ -48,7 +55,9 @@ async function getRepos(): Promise<Repo[]> {
     );
     if (!res.ok) return FALLBACK;
     const repos: Repo[] = await res.json();
-    const filtered = repos.filter((r) => !r.archived);
+    const filtered = repos.filter(
+      (r) => !r.archived && !EXCLUDE.has(r.name.toLowerCase())
+    );
     if (!filtered.length) return FALLBACK;
     // Originals first, then forks; each group most-recently-pushed first.
     return filtered
