@@ -48,7 +48,7 @@ export function personJsonLd() {
     jobTitle: siteConfig.title,
     email: siteConfig.email,
     url: siteConfig.url,
-    image: `${siteConfig.url}/avatar.jpg`,
+    image: `${siteConfig.url}/profile.jpg`,
     sameAs: [siteConfig.links.github, siteConfig.links.linkedin],
     knowsAbout: [
       "Amazon Web Services",
@@ -62,7 +62,7 @@ export function personJsonLd() {
     ],
     worksFor: {
       "@type": "Organization",
-      name: "Nimbus Cloud Technologies",
+      name: "Easy Deploy",
     },
   };
 }

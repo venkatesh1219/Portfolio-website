@@ -34,3 +34,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# standalone sample repos (pushed to their own GitHub repos, not part of this site)
+/cloud-portfolio-projects

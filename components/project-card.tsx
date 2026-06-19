@@ -1,4 +1,5 @@
-import { Github, ArrowUpRight } from "lucide-react";
+import Link from "next/link";
+import { Github, ArrowUpRight, ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArchitectureDiagram } from "@/components/architecture-diagrams";
@@ -21,7 +22,14 @@ export function ProjectCard({ project, index }: { project: Project; index: numbe
       {/* Content */}
       <div className={reversed ? "lg:order-1" : ""}>
         <Badge variant="accent">{project.category}</Badge>
-        <h3 className="mt-3 text-2xl font-bold tracking-tight">{project.title}</h3>
+        <h3 className="mt-3 text-2xl font-bold tracking-tight">
+          <Link
+            href={`/projects/${project.slug}`}
+            className="rounded-md transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            {project.title}
+          </Link>
+        </h3>
         <p className="mt-1 text-sm font-medium text-primary">{project.tagline}</p>
         <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
           {project.description}
@@ -60,6 +68,12 @@ export function ProjectCard({ project, index }: { project: Project; index: numbe
 
         {/* Actions */}
         <div className="mt-6 flex flex-wrap gap-3">
+          <Button asChild size="sm">
+            <Link href={`/projects/${project.slug}`}>
+              Read case study
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </Button>
           <Button asChild variant="outline" size="sm">
             <a href={project.github} target="_blank" rel="noopener noreferrer">
               <Github className="h-4 w-4" />

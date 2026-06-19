@@ -67,6 +67,13 @@ export type Project = {
     | "gitops"
     | "cost"
     | "observability";
+  /** Optional long-form case study shown on the project detail page. */
+  caseStudy?: {
+    challenge: string;
+    approach: string[];
+    outcome: string;
+    repoTour?: { path: string; what: string }[];
+  };
 };
 
 export const projects: Project[] = [
@@ -98,8 +105,25 @@ export const projects: Project[] = [
       "Centralized CloudTrail logging and Service Control Policy guardrails.",
       "Documented architecture patterns and mentored the team on best practices.",
     ],
-    github: "https://github.com/venkatesh1219",
+    github: "https://github.com/venkatesh1219/aws-landing-zone-terraform",
     diagram: "landing-zone",
+    caseStudy: {
+      challenge:
+        "Each new AWS environment took roughly a week to stand up by hand, and small differences between dev, staging, UAT, and prod created configuration drift that was hard to audit and easy to get wrong.",
+      approach: [
+        "Modeled the whole organization as reusable Terraform modules — organization/OUs, networking, logging, SCP guardrails, and an IAM baseline.",
+        "Connected every environment VPC to a single Transit Gateway hub with deliberately non-overlapping CIDRs, so there is no peering mesh to maintain.",
+        "Centralized a multi-region, log-validated CloudTrail into an immutable bucket in a dedicated log-archive account.",
+        "Attached Service Control Policies at the Workloads OU so guardrails apply to every current and future account and cannot be switched off.",
+      ],
+      outcome:
+        "Environment provisioning dropped from about a week to a single day, configuration drift was eliminated, and all four accounts now sit under consistent, code-defined guardrails.",
+      repoTour: [
+        { path: "modules/", what: "organization · networking · logging · scp · iam-baseline" },
+        { path: "environments/", what: "dev · staging · uat · prod (backend + tfvars per env)" },
+        { path: "docs/ARCHITECTURE.md", what: "account topology, networking, and guardrail design" },
+      ],
+    },
   },
   {
     slug: "eks-platform",
@@ -128,8 +152,25 @@ export const projects: Project[] = [
       "HPA-driven autoscaling sized to real traffic patterns.",
       "Blue-green deployments delivering zero-downtime releases.",
     ],
-    github: "https://github.com/venkatesh1219",
+    github: "https://github.com/venkatesh1219/eks-microservices-platform",
     diagram: "eks",
+    caseStudy: {
+      challenge:
+        "Running 20+ microservices on EKS meant balancing cost against burst capacity, and every release risked downtime — rollbacks could take 45 minutes when something went wrong.",
+      approach: [
+        "Split compute across an On-Demand managed node group for steady baseline and a tainted Spot group for bursty, stateless work, with a Fargate profile isolating batch jobs.",
+        "Packaged services in a single reusable Helm chart with HPA, ingress, and a parameterized active 'color' for blue-green.",
+        "Drove all deployments through an ArgoCD app-of-apps so the cluster's state always equals what's in git.",
+        "Made rollback a one-line change: flip the active color and re-sync.",
+      ],
+      outcome:
+        "Zero-downtime releases at 99.95% availability across 20+ services, with rollback time cut from 45 minutes to 5.",
+      repoTour: [
+        { path: "terraform/", what: "EKS cluster, VPC, managed + spot node groups, Fargate, IRSA" },
+        { path: "helm/microservice/", what: "reusable chart: deployment, service, HPA, ingress, blue-green" },
+        { path: "argocd/", what: "app-of-apps + per-service Applications" },
+      ],
+    },
   },
   {
     slug: "gitops-cicd-platform",
@@ -159,8 +200,25 @@ export const projects: Project[] = [
       "Automated ECS deployments via CodePipeline + CodeBuild.",
       "Event-driven ops (Lambda, EventBridge, SNS) removed 15+ hrs/week of toil.",
     ],
-    github: "https://github.com/venkatesh1219",
+    github: "https://github.com/venkatesh1219/gitops-cicd-platform",
     diagram: "gitops",
+    caseStudy: {
+      challenge:
+        "Deployments were manual and error-prone, releases occasionally caused outages, and there was no consistent quality or security gate before code reached production.",
+      approach: [
+        "Built CI that blocks merges on a SonarCloud quality gate and a Snyk high/critical vulnerability scan, with results uploaded to GitHub code-scanning.",
+        "Adopted a strict GitOps model: CI never touches the cluster — it builds an image and commits a new tag, and ArgoCD reconciles the change.",
+        "Used an ArgoCD ApplicationSet to template one Application per environment from a single values file, making promotion auditable through git history.",
+        "Implemented the same stages in both GitHub Actions and a Jenkinsfile, so the model is tool-agnostic for teams mid-migration.",
+      ],
+      outcome:
+        "Zero downtime during releases, 40% fewer production defects, and 80% less manual deployment effort — with one-revert rollbacks.",
+      repoTour: [
+        { path: ".github/workflows/", what: "ci (test + SonarCloud + Snyk) and cd (build + promote)" },
+        { path: "argocd/applicationsets/", what: "one Application per environment from a template" },
+        { path: "scripts/bump-image.sh", what: "the GitOps promotion step" },
+      ],
+    },
   },
   {
     slug: "cost-optimization",
@@ -189,8 +247,25 @@ export const projects: Project[] = [
       "Intelligent scheduling for non-production environments.",
       "Documented FinOps framework and trained the team on cost monitoring.",
     ],
-    github: "https://github.com/venkatesh1219",
+    github: "https://github.com/venkatesh1219/aws-cost-optimization",
     diagram: "cost",
+    caseStudy: {
+      challenge:
+        "AWS spend across four accounts was climbing without clear ownership, and non-production environments ran 24/7 even though they were only used during office hours.",
+      approach: [
+        "Ran a full Cost Explorer audit by tag to make spend visible and find the biggest levers.",
+        "Wrote read-only Python tooling to flag over-provisioned EC2 (14-day p95 CPU) and idle resources (unattached EBS, unused Elastic IPs).",
+        "Deployed a tag-driven Lambda scheduler that powers non-prod down out of hours, plus Savings Plans and Spot migration for the right workloads.",
+        "Added AWS Budgets alerts and documented a FinOps framework the team now follows.",
+      ],
+      outcome:
+        "$8,000/month — a 32% reduction — saved across four accounts, with delivery velocity unchanged and a repeatable framework to keep it from regressing.",
+      repoTour: [
+        { path: "scripts/", what: "rightsizing and idle-resource reports (read-only)" },
+        { path: "lambda/instance_scheduler/", what: "stop/start office-hours instances by tag" },
+        { path: "docs/FINOPS_FRAMEWORK.md", what: "the inform → optimize → operate loop" },
+      ],
+    },
   },
   {
     slug: "observability-stack",
@@ -219,8 +294,25 @@ export const projects: Project[] = [
       "PagerDuty alerting with on-call runbooks for fast response.",
       "Mentored the team on SRE principles and incident response.",
     ],
-    github: "https://github.com/venkatesh1219",
+    github: "https://github.com/venkatesh1219/observability-stack",
     diagram: "observability",
+    caseStudy: {
+      challenge:
+        "Incidents were often noticed by customers first, signals were scattered across tools, and noisy cause-based alerts created fatigue rather than fast response.",
+      approach: [
+        "Centralized metrics (Prometheus), logs (Loki + ELK), and dashboards (Grafana) into one pane of glass across every environment.",
+        "Expressed SLOs with the RED method — Rate, Errors, Duration — so alerts fire on symptoms users feel, not on noisy internal causes.",
+        "Routed critical alerts to PagerDuty and warnings to Slack via Alertmanager, with every critical alert linking to a runbook.",
+        "Wrote per-alert runbooks and ran blameless postmortems with tracked action items.",
+      ],
+      outcome:
+        "MTTR cut in half and 95% of incidents caught before customer impact, with unified dashboards across all environments.",
+      repoTour: [
+        { path: "prometheus/rules/", what: "SLO alert rules using the RED method" },
+        { path: "alertmanager/", what: "critical → PagerDuty, warning → Slack routing" },
+        { path: "docs/runbooks/", what: "per-alert response checklists" },
+      ],
+    },
   },
 ];
 
