@@ -27,6 +27,8 @@ yarn-error.log*
 # env files
 .env
 .env*.local
+.env.development
+.env.production
 
 # vercel
 .vercel
@@ -40,3 +42,84 @@ next-env.d.ts
 
 # local QA renders (not part of the site)
 /_preview
+
+# ---------------------------------------------------------------------------
+# Security — never commit secrets or credentials
+# ---------------------------------------------------------------------------
+# private keys & certificates
+*.key
+*.crt
+*.cer
+*.p12
+*.pfx
+id_rsa
+id_rsa.*
+*.ppk
+
+# cloud / provider credentials
+.aws/
+aws.json
+credentials
+*credentials*.json
+gha-creds-*.json
+service-account*.json
+*serviceaccount*.json
+.npmrc
+.pypirc
+
+# generic secret files
+secrets.*
+*secret*.yml
+*secret*.yaml
+*.secret
+.secrets/
+
+# terraform state & secret vars (safety net even though sample repos are ignored)
+*.tfstate
+*.tfstate.*
+*.tfvars
+!example.tfvars
+.terraform/
+.terraform.lock.hcl
+crash.log
+
+# kubernetes / helm local config
+kubeconfig
+*kubeconfig*
+.kube/
+charts/*.tgz
+
+# ---------------------------------------------------------------------------
+# Unwanted / unrelated local files
+# ---------------------------------------------------------------------------
+# logs
+*.log
+logs/
+
+# editor & IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.history/
+
+# OS junk
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+desktop.ini
+
+# caches & temp
+.cache/
+.tmp/
+tmp/
+*.tmp
+*.bak
+*.orig
+
+# local scratch / generators (handy to keep locally, not in the repo)
+gen_post_graphics.py
+**/gen_post_graphics.py
