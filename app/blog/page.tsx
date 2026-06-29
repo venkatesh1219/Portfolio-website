@@ -56,6 +56,17 @@ export default async function BlogPage() {
                 href={`/blog/${post.slug}`}
                 className="group flex h-full flex-col rounded-2xl border border-border bg-card/40 p-6 transition-colors hover:border-primary/40"
               >
+                {post.cover ? (
+                  <div className="mb-4 overflow-hidden rounded-xl border border-border bg-white">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={post.cover}
+                      alt={`${post.title} — architecture diagram`}
+                      loading="lazy"
+                      className="aspect-[16/8] w-full object-cover object-left-top transition-transform duration-300 group-hover:scale-[1.02]"
+                    />
+                  </div>
+                ) : null}
                 <div className="flex flex-wrap items-center gap-1.5">
                   {post.tags.map((tag) => (
                     <Badge key={tag} variant="secondary">

@@ -12,7 +12,7 @@ import {
   Check,
 } from "lucide-react";
 import { CloudBackground } from "@/components/cloud-background";
-import { ArchitectureDiagram } from "@/components/architecture-diagrams";
+import { ProjectVisual } from "@/components/architecture-diagrams";
 import { CtaSection } from "@/components/cta-section";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -158,10 +158,10 @@ export default async function ProjectDetailPage({ params }: Params) {
         <Reveal>
           <div className="mb-6 flex items-center gap-2 text-sm font-semibold uppercase tracking-widest text-primary">
             <span className="h-px w-6 bg-primary" aria-hidden="true" />
-            Architecture
+            {project.diagram ? "Architecture" : "Stack & impact"}
           </div>
           <div className="rounded-2xl border border-border bg-card/40 p-6 sm:p-8">
-            <ArchitectureDiagram kind={project.diagram} />
+            <ProjectVisual project={project} />
           </div>
         </Reveal>
       </section>

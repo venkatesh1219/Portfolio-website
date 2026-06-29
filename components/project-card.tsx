@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Github, ArrowUpRight, ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArchitectureDiagram } from "@/components/architecture-diagrams";
+import { ProjectVisual } from "@/components/architecture-diagrams";
 import type { Project } from "@/lib/data";
 
 export function ProjectCard({ project, index }: { project: Project; index: number }) {
@@ -16,7 +16,7 @@ export function ProjectCard({ project, index }: { project: Project; index: numbe
           <span className="h-px w-6 bg-primary" />
           Architecture
         </div>
-        <ArchitectureDiagram kind={project.diagram} />
+        <ProjectVisual project={project} />
       </div>
 
       {/* Content */}

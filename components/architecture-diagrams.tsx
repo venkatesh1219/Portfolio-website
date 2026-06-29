@@ -214,7 +214,7 @@ function Observability() {
   );
 }
 
-const map: Record<Project["diagram"], React.FC> = {
+const map: Record<NonNullable<Project["diagram"]>, React.FC> = {
   "landing-zone": LandingZone,
   eks: EKS,
   gitops: GitOps,
@@ -222,11 +222,73 @@ const map: Record<Project["diagram"], React.FC> = {
   observability: Observability,
 };
 
-export function ArchitectureDiagram({ kind }: { kind: Project["diagram"] }) {
+export function ArchitectureDiagram({
+  kind,
+}: {
+  kind: NonNullable<Project["diagram"]>;
+}) {
   const Diagram = map[kind];
   return (
     <div className="rounded-lg border border-border bg-background/40 p-4">
       <Diagram />
     </div>
   );
+}
+
+/**
+ * Fallback visual for projects without a hand-drawn diagram: a clean,
+ * theme-aware "stack at a glance" panel. Keeps the card/detail layout
+ * balanced without committing to an architecture diagram.
+ */
+export function ProjectStackPanel({ project }: { project: Project }) {
+  const lead = project.impact[0];
+  return (
+    <div className="flex h-full flex-col justify-between gap-4 rounded-lg border border-border bg-background/40 p-5">
+      <div className="flex items-center justify-between gap-2">
+        <span className="inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+          <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+          {project.category}
+        </span>
+        {project.level ? (
+          <span className="rounded-full border border-primary/40 bg-primary/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-primary">
+            {project.level}
+          </span>
+        ) : null}
+      </div>
+
+      {lead ? (
+        <div className="rounded-lg border border-border bg-card/50 p-4">
+          <p className="text-2xl font-bold tracking-tight text-foreground">
+            {lead.metric}
+          </p>
+          <p className="mt-0.5 text-xs leading-tight text-muted-foreground">
+            {lead.label}
+          </p>
+        </div>
+      ) : null}
+
+      <div>
+        <p className="mb-2 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+          Core stack
+        </p>
+        <div className="grid grid-cols-2 gap-1.5">
+          {project.techStack.slice(0, 6).map((tech) => (
+            <span
+              key={tech}
+              className="flex items-center gap-1.5 rounded-md border border-border bg-card/40 px-2 py-1.5 text-[11px] font-medium text-foreground"
+            >
+              <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-primary/70" />
+              <span className="truncate">{tech}</span>
+            </span>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/** Picks the right project visual: hand-drawn diagram if present, else the stack panel. */
+export function ProjectVisual({ project }: { project: Project }) {
+  if (project.diagram) return <ArchitectureDiagram kind={project.diagram} />;
+  return <ProjectStackPanel project={project} />;
 }

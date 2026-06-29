@@ -4,6 +4,8 @@
  * Edit this file to update projects, experience, education, skills, and blog.
  */
 
+import { blogBodies } from "./blog-content";
+
 export type Skill = {
   name: string;
   category: "Cloud" | "Containers" | "IaC" | "CI/CD" | "Observability" | "Languages";
@@ -60,13 +62,16 @@ export type Project = {
   highlights: string[];
   github: string;
   liveUrl?: string;
-  /** key used to pick the right architecture diagram component */
-  diagram:
+  /** key used to pick the right architecture diagram component.
+   *  Optional — newer projects render a tech-stack panel instead. */
+  diagram?:
     | "landing-zone"
     | "eks"
     | "gitops"
     | "cost"
     | "observability";
+  /** Difficulty/seniority signal shown on cards. */
+  level?: "Intermediate" | "Advanced";
   /** Optional long-form case study shown on the project detail page. */
   caseStudy?: {
     challenge: string;
@@ -314,6 +319,198 @@ export const projects: Project[] = [
       ],
     },
   },
+  {
+    slug: "multi-region-dr",
+    title: "Multi-Region Disaster Recovery",
+    tagline: "A DR plan you can actually prove — on a schedule",
+    description:
+      "An active-warm multi-region architecture on AWS with Aurora Global Database, Route 53 health-check failover, and a warm-standby EKS cluster in a second region. Quarterly game-days force a real failover and measure RTO/RPO — so recovery is a tested number, not a wiki page nobody has run.",
+    category: "Resilience & DR",
+    featured: true,
+    level: "Advanced",
+    techStack: [
+      "Aurora Global Database",
+      "Route 53",
+      "Amazon EKS",
+      "Terraform",
+      "S3 Cross-Region Replication",
+      "CloudWatch Synthetics",
+      "AWS Backup",
+    ],
+    impact: [
+      { metric: "< 15 min", label: "measured RTO (failover game-days)" },
+      { metric: "< 1 min", label: "RPO with Aurora Global replication" },
+      { metric: "Quarterly", label: "real failovers, on a schedule" },
+    ],
+    highlights: [
+      "Aurora Global Database with sub-second cross-region replication and managed promotion.",
+      "Route 53 health checks flip traffic to the standby region automatically.",
+      "Warm-standby EKS in region two, kept in sync via GitOps and minimal-scale node groups.",
+      "Quarterly game-days that trigger a genuine failover and record RTO/RPO each time.",
+    ],
+    github: "https://github.com/venkatesh1219/multi-region-dr-aws",
+    caseStudy: {
+      challenge:
+        "Most DR plans are a wiki page nobody has tested — the real RTO and RPO are unknown until the day a region fails, which is the worst possible time to find out the app doesn't reconnect cleanly.",
+      approach: [
+        "Made Aurora Global Database the system of record, with a read-replica region promotable to primary in minutes and sub-second replication lag.",
+        "Fronted both regions with Route 53 health checks and failover routing so traffic moves automatically when the primary stops answering.",
+        "Kept a warm-standby EKS cluster in the second region reconciled by ArgoCD, scaled low to control cost but ready to absorb load on promotion.",
+        "Scheduled quarterly game-days that force a real failover, exercise the application's reconnect path, and record measured RTO/RPO every time.",
+      ],
+      outcome:
+        "Validated recovery of under 15 minutes RTO and under 1 minute RPO — measured, on a schedule, by the on-call team rather than assumed on paper.",
+      repoTour: [
+        { path: "terraform/regions/", what: "primary + standby region stacks (VPC, EKS, Aurora)" },
+        { path: "terraform/route53/", what: "health checks + failover routing policy" },
+        { path: "gameday/", what: "failover runbook + automated RTO/RPO measurement scripts" },
+      ],
+    },
+  },
+  {
+    slug: "zero-trust-secrets",
+    title: "Zero-Trust Secrets & Policy Baseline",
+    tagline: "No long-lived secrets, no insecure pod ever ships",
+    description:
+      "A Kubernetes security baseline that makes insecure configuration impossible to deploy. HashiCorp Vault issues dynamic, short-TTL secrets synced in by the External Secrets Operator; IRSA gives every pod least-privilege AWS access; and OPA Gatekeeper blocks insecure workloads at admission. Zero long-lived secrets, 100% of workloads policy-compliant.",
+    category: "Security & DevSecOps",
+    featured: true,
+    level: "Advanced",
+    techStack: [
+      "HashiCorp Vault",
+      "External Secrets Operator",
+      "OPA Gatekeeper",
+      "IRSA",
+      "Kubernetes NetworkPolicy",
+      "AWS KMS",
+      "cert-manager",
+    ],
+    impact: [
+      { metric: "0", label: "long-lived secrets in the cluster" },
+      { metric: "100%", label: "workloads passing admission policy" },
+      { metric: "0", label: "critical findings in security audit" },
+    ],
+    highlights: [
+      "Vault issues dynamic, short-TTL database and cloud credentials — nothing long-lived to steal.",
+      "External Secrets Operator syncs secrets in so none ever sit in a manifest or Git.",
+      "OPA Gatekeeper blocks :latest images, privileged pods, and missing limits at admission.",
+      "IRSA + default-deny NetworkPolicies enforce least privilege end to end.",
+    ],
+    github: "https://github.com/venkatesh1219/zero-trust-secrets-k8s",
+    caseStudy: {
+      challenge:
+        "Almost every cluster audit turns up the same two problems: secrets sitting in plaintext manifests, and nothing stopping an insecure pod from shipping. Security that depends on people remembering doesn't scale.",
+      approach: [
+        "Stood up Vault as the secrets authority, issuing dynamic short-TTL credentials so a leaked secret is worthless within minutes.",
+        "Synced secrets into Kubernetes with the External Secrets Operator, keeping plaintext out of every manifest and Git history.",
+        "Granted per-pod AWS access with IRSA — no shared node credentials, no wildcard policies — built from CloudTrail-observed usage.",
+        "Enforced an OPA Gatekeeper policy set at admission so insecure config fails before it reaches the cluster, with default-deny NetworkPolicies on top.",
+      ],
+      outcome:
+        "Zero long-lived secrets, 100% of workloads passing policy, insecure deploys rejected before they land, and zero critical findings on the next audit.",
+      repoTour: [
+        { path: "vault/", what: "dynamic secret engines + Kubernetes auth roles" },
+        { path: "gatekeeper/constraints/", what: "admission policies: image, privilege, limits" },
+        { path: "policies/network/", what: "default-deny + per-namespace NetworkPolicies" },
+      ],
+    },
+  },
+  {
+    slug: "internal-developer-platform",
+    title: "Internal Developer Platform",
+    tagline: "Golden paths over tickets — self-service for engineers",
+    description:
+      "A self-service internal developer platform built on Backstage and Crossplane. Developers scaffold a new service, get a repo, CI/CD, namespace, and observability wired up from a golden-path template — provisioning real AWS infrastructure through Crossplane compositions, governed and least-privilege, without filing a ticket.",
+    category: "Platform Engineering",
+    featured: true,
+    level: "Advanced",
+    techStack: [
+      "Backstage",
+      "Crossplane",
+      "Kubernetes",
+      "ArgoCD",
+      "GitHub Actions",
+      "Terraform",
+      "OpenTelemetry",
+    ],
+    impact: [
+      { metric: "Days → mins", label: "to stand up a new service" },
+      { metric: "Self-service", label: "infra without filing tickets" },
+      { metric: "1 golden path", label: "consistent, governed by default" },
+    ],
+    highlights: [
+      "Backstage software templates scaffold repo, pipeline, namespace, and dashboards in one flow.",
+      "Crossplane compositions provision real AWS resources (RDS, S3, IAM) with guardrails.",
+      "Every generated service ships with CI/CD, GitOps wiring, and observability by default.",
+      "A service catalog and TechDocs make ownership and docs discoverable across the org.",
+    ],
+    github: "https://github.com/venkatesh1219/internal-developer-platform",
+    caseStudy: {
+      challenge:
+        "As teams grew, every new service meant a queue of tickets — repo, pipeline, cloud resources, monitoring — each set up slightly differently. The platform team became a bottleneck and consistency drifted.",
+      approach: [
+        "Built a Backstage portal as the single front door, with software templates encoding the organization's golden path.",
+        "Replaced ticket-driven infra with Crossplane compositions so developers request governed AWS resources declaratively, in Git.",
+        "Wired every scaffolded service to CI/CD, ArgoCD, and a default observability stack so it's production-shaped from minute one.",
+        "Published a service catalog and TechDocs so ownership, APIs, and runbooks are discoverable instead of tribal.",
+      ],
+      outcome:
+        "Spinning up a new, production-ready service dropped from days of cross-team tickets to minutes of self-service — consistent, governed, and least-privilege by default.",
+      repoTour: [
+        { path: "backstage/templates/", what: "golden-path software templates (service scaffolding)" },
+        { path: "crossplane/compositions/", what: "governed AWS resource compositions (RDS, S3, IAM)" },
+        { path: "catalog/", what: "service catalog entities + TechDocs" },
+      ],
+    },
+  },
+  {
+    slug: "event-streaming-platform",
+    title: "Event-Driven Streaming Platform",
+    tagline: "Real-time pipelines on MSK with exactly-once processing",
+    description:
+      "A real-time, event-driven data platform on AWS using Amazon MSK (Kafka), schema-governed topics, and a mix of Kafka Streams and serverless consumers. Backed by a tiered datastore — DynamoDB for low-latency lookups, S3 for the data lake — it processes high-volume events with exactly-once semantics and replayable history.",
+    category: "Data & Streaming",
+    featured: true,
+    level: "Advanced",
+    techStack: [
+      "Amazon MSK (Kafka)",
+      "EventBridge",
+      "Kafka Streams",
+      "AWS Lambda",
+      "DynamoDB",
+      "S3 Data Lake",
+      "Glue Schema Registry",
+    ],
+    impact: [
+      { metric: "Exactly-once", label: "processing semantics" },
+      { metric: "< 15 ms", label: "p99 online lookup (DynamoDB)" },
+      { metric: "Replayable", label: "event history from the log" },
+    ],
+    highlights: [
+      "Amazon MSK as the durable event backbone with schema-governed, versioned topics.",
+      "Kafka Streams and idempotent Lambda consumers giving exactly-once, replayable processing.",
+      "Tiered storage: DynamoDB for sub-15ms online lookups, S3 as the analytical data lake.",
+      "EventBridge fan-out decouples producers from downstream consumers cleanly.",
+    ],
+    github: "https://github.com/venkatesh1219/event-streaming-platform",
+    caseStudy: {
+      challenge:
+        "Batch ETL meant data was always stale, point-to-point integrations were brittle, and reprocessing after a bug meant rebuilding state by hand. The business needed real-time, and engineering needed something replayable.",
+      approach: [
+        "Made Amazon MSK the durable event backbone, with the Glue Schema Registry enforcing versioned, backward-compatible contracts on every topic.",
+        "Processed streams with Kafka Streams for stateful joins and idempotent Lambda consumers for fan-out work, keyed for exactly-once effects.",
+        "Split storage by access pattern — DynamoDB for sub-15ms online reads, S3 as the replayable analytical lake — fed from the same log.",
+        "Decoupled producers and consumers through EventBridge so new consumers can be added without touching producers, and history can be replayed.",
+      ],
+      outcome:
+        "Real-time pipelines with exactly-once processing, sub-15ms online lookups, and a replayable event history — so a bug fix means a safe replay, not a manual rebuild.",
+      repoTour: [
+        { path: "terraform/msk/", what: "MSK cluster, topics, and Glue Schema Registry" },
+        { path: "streams/", what: "Kafka Streams topology (stateful joins, aggregations)" },
+        { path: "consumers/", what: "idempotent Lambda consumers + DynamoDB/S3 sinks" },
+      ],
+    },
+  },
 ];
 
 export type Experience = {
@@ -416,35 +613,116 @@ export type BlogPost = {
   date: string; // ISO
   readingTime: string;
   tags: string[];
+  cover?: string; // path to an architecture diagram in /public/blog
+  body?: string; // full markdown, sourced from lib/blog-content.ts
 };
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: "multi-region-dr-game-days",
+    title: "Proving Multi-Region DR: Game-Days, Aurora Global, and a 15-Minute RTO",
+    excerpt:
+      "An active-warm AWS architecture with Aurora Global Database and Route 53 failover — and the quarterly game-days that turn RTO/RPO from a guess into a measured number.",
+    date: "2026-06-15",
+    readingTime: "8 min read",
+    tags: ["AWS", "SRE", "Disaster Recovery"],
+    body: blogBodies["multi-region-dr-game-days"],
+  },
+  {
+    slug: "zero-trust-secrets-kubernetes",
+    title: "A Zero-Trust Secrets Baseline for Kubernetes (Vault + ESO + IRSA)",
+    excerpt:
+      "Dynamic short-TTL secrets with Vault, sync via External Secrets, per-pod least privilege with IRSA, and admission control that rejects insecure pods before they ship.",
+    date: "2026-06-08",
+    readingTime: "7 min read",
+    tags: ["Kubernetes", "DevSecOps", "Vault"],
+    body: blogBodies["zero-trust-secrets-kubernetes"],
+  },
+  {
+    slug: "building-an-internal-developer-platform",
+    title: "Building an Internal Developer Platform: Golden Paths over Tickets",
+    excerpt:
+      "How Backstage software templates and Crossplane compositions turn days of cross-team tickets into minutes of governed, self-service provisioning.",
+    date: "2026-06-01",
+    readingTime: "8 min read",
+    tags: ["Platform Engineering", "Backstage", "Crossplane"],
+    body: blogBodies["building-an-internal-developer-platform"],
+  },
+  {
+    slug: "event-driven-streaming-aws",
+    title: "Event-Driven on AWS: MSK, Exactly-Once, and Replayable Pipelines",
+    excerpt:
+      "Making Amazon MSK the source of truth, processing with Kafka Streams and idempotent Lambdas, and tiering storage across DynamoDB and S3 for real-time, replayable data.",
+    date: "2026-05-22",
+    readingTime: "7 min read",
+    tags: ["AWS", "Kafka", "Data Engineering"],
+    body: blogBodies["event-driven-streaming-aws"],
+  },
+  {
     slug: "aws-cost-optimization-32-percent",
-    title: "How We Cut AWS Cost 32% ($8K/month) Across 4 Accounts",
+    title: "How I Cut an AWS Bill 32% ($8K/month) Across 4 Accounts",
     excerpt:
       "The cost audit, Spot migration, Savings Plans, and right-sizing playbook that delivered real savings — plus the FinOps guardrails that kept teams shipping.",
     date: "2026-05-12",
     readingTime: "9 min read",
     tags: ["AWS", "FinOps", "Cost Optimization"],
+    cover: "/blog/diagram-aws-cost-optimization.svg",
+    body: blogBodies["aws-cost-optimization-32-percent"],
   },
   {
     slug: "zero-downtime-blue-green-argocd",
     title: "Zero-Downtime Releases with Blue-Green and ArgoCD",
     excerpt:
       "How a GitOps delivery model on EKS eliminated release-time outages and cut rollback from 45 minutes to 5 across 20+ microservices.",
-    date: "2026-03-28",
+    date: "2026-04-28",
     readingTime: "10 min read",
     tags: ["GitOps", "ArgoCD", "Kubernetes"],
+    cover: "/blog/diagram-blue-green-argocd.svg",
+    body: blogBodies["zero-downtime-blue-green-argocd"],
+  },
+  {
+    slug: "eks-autoscaling-with-karpenter",
+    title: "EKS Autoscaling with Karpenter (and a Lower Compute Bill)",
+    excerpt:
+      "Why I moved the node layer from Cluster Autoscaler to Karpenter — just-in-time provisioning, smart Spot mixing, and aggressive consolidation.",
+    date: "2026-04-06",
+    readingTime: "6 min read",
+    tags: ["Kubernetes", "Karpenter", "FinOps"],
+    cover: "/blog/diagram-karpenter-eks.svg",
+    body: blogBodies["eks-autoscaling-with-karpenter"],
   },
   {
     slug: "aws-landing-zone-terraform",
     title: "A Multi-Account AWS Landing Zone with Terraform",
     excerpt:
       "Reusable modules, Transit Gateway networking, centralized CloudTrail, and SCP guardrails — going from week-long provisioning to a single day.",
-    date: "2026-02-09",
+    date: "2026-03-09",
     readingTime: "8 min read",
     tags: ["AWS", "Terraform", "Security"],
+    cover: "/blog/diagram-aws-landing-zone.svg",
+    body: blogBodies["aws-landing-zone-terraform"],
+  },
+  {
+    slug: "ci-cd-pipeline-2-weeks-to-3-days",
+    title: "From 2-Week Releases to 3 Days: A CI/CD Pipeline Rebuild",
+    excerpt:
+      "Killing manual gates, parallelizing quality checks, shifting security left, and letting ArgoCD own the rollout — 85% faster, with fewer defects.",
+    date: "2026-02-18",
+    readingTime: "6 min read",
+    tags: ["CI/CD", "GitOps", "DevOps"],
+    cover: "/blog/diagram-cicd-pipeline.svg",
+    body: blogBodies["ci-cd-pipeline-2-weeks-to-3-days"],
+  },
+  {
+    slug: "kubernetes-security-baseline",
+    title: "A Kubernetes Security Baseline That Enforces Itself",
+    excerpt:
+      "Admission control with OPA Gatekeeper, dynamic secrets with Vault, per-pod least privilege with IRSA, and default-deny networking — guardrails over checklists.",
+    date: "2026-02-02",
+    readingTime: "6 min read",
+    tags: ["Kubernetes", "DevSecOps", "Security"],
+    cover: "/blog/diagram-k8s-security.svg",
+    body: blogBodies["kubernetes-security-baseline"],
   },
   {
     slug: "observability-that-halved-mttr",
@@ -454,5 +732,18 @@ export const blogPosts: BlogPost[] = [
     date: "2026-01-15",
     readingTime: "7 min read",
     tags: ["Observability", "SRE", "Prometheus"],
+    cover: "/blog/diagram-observability-mttr.svg",
+    body: blogBodies["observability-that-halved-mttr"],
+  },
+  {
+    slug: "llm-inference-platform-eks",
+    title: "A Self-Hosted LLM Inference Platform on EKS (Cost ~60% Lower)",
+    excerpt:
+      "Replacing a hosted LLM API with vLLM on EKS — an OpenAI-compatible gateway, Karpenter GPU nodes, KEDA queue-depth scaling, and a semantic cache.",
+    date: "2025-12-20",
+    readingTime: "9 min read",
+    tags: ["MLOps", "Kubernetes", "AWS"],
+    cover: "/blog/llm-inference-architecture.png",
+    body: blogBodies["llm-inference-platform-eks"],
   },
 ];

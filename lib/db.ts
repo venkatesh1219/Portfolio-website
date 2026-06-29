@@ -84,6 +84,7 @@ export type Post = {
   readingTime: string;
   status: PostStatus;
   date: string; // ISO — published_at, else created_at
+  cover?: string; // optional architecture diagram (seed posts only)
 };
 
 export function slugify(input: string): string {
@@ -110,11 +111,12 @@ function seedPosts(): Post[] {
     slug: p.slug,
     title: p.title,
     excerpt: p.excerpt,
-    body: "",
+    body: p.body ?? "",
     tags: [...p.tags],
     readingTime: p.readingTime,
     status: "published" as const,
     date: p.date,
+    cover: p.cover,
   }));
 }
 
@@ -141,7 +143,22 @@ export async function getPublishedPosts(): Promise<Post[]> {
       SELECT * FROM posts
       WHERE status = 'published'
       ORDER BY COALESCE(published_at, created_at) DESC`;
-    return rows.length ? rows.map(rowToPost) : seedPosts();
+    // Merge: code seed is the baseline; any DB post overrides its slug so
+    // admin-edited posts win, while code-authored articles always appear.
+    const seedBySlug = new Map<string, Post>(
+      seedPosts().map((p) => [p.slug, p] as [string, Post]),
+    );
+    const bySlug = new Map<string, Post>(seedBySlug);
+    for (const r of rows) {
+      const p = rowToPost(r);
+      const seed = seedBySlug.get(p.slug);
+      if (seed) {
+        if (!p.body) p.body = seed.body;
+        if (!p.cover) p.cover = seed.cover;
+      }
+      bySlug.set(p.slug, p);
+    }
+    return [...bySlug.values()].sort((a, b) => (a.date < b.date ? 1 : -1));
   } catch {
     return seedPosts();
   }
@@ -154,8 +171,16 @@ export async function getPublishedPostBySlug(slug: string): Promise<Post | null>
     await ensureSchema();
     const rows = await sql`
       SELECT * FROM posts WHERE slug = ${slug} AND status = 'published' LIMIT 1`;
-    if (rows.length) return rowToPost(rows[0]);
-    return seedPosts().find((p) => p.slug === slug) ?? null;
+    const seed = seedPosts().find((p) => p.slug === slug) ?? null;
+    if (rows.length) {
+      const p = rowToPost(rows[0]);
+      if (seed) {
+        if (!p.body) p.body = seed.body;
+        if (!p.cover) p.cover = seed.cover;
+      }
+      return p;
+    }
+    return seed;
   } catch {
     return seedPosts().find((p) => p.slug === slug) ?? null;
   }
