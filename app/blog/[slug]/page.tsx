@@ -27,7 +27,14 @@ export async function generateMetadata({ params }: Params) {
     title: post.title,
     description: post.excerpt,
     path: `/blog/${post.slug}`,
+    image: postOgImage(post),
   });
+}
+
+function postOgImage(post: { title: string; tags: string[] }) {
+  return `/og?title=${encodeURIComponent(post.title)}&subtitle=${encodeURIComponent(
+    post.tags[0] ?? siteConfig.title,
+  )}`;
 }
 
 export default async function BlogPostPage({ params }: Params) {
@@ -43,6 +50,7 @@ export default async function BlogPostPage({ params }: Params) {
     datePublished: post.date,
     dateModified: post.date,
     keywords: post.tags.join(", "),
+    image: `${siteConfig.url}${postOgImage(post)}`,
     author: { "@type": "Person", name: siteConfig.name, url: siteConfig.url },
     mainEntityOfPage: `${siteConfig.url}/blog/${post.slug}`,
   };

@@ -44,7 +44,7 @@ export const heroSkills = [
 export type Stat = { label: string; value: string; hint: string };
 
 export const stats: Stat[] = [
-  { label: "Years in DevOps", value: "3+", hint: "Cloud & platform engineering" },
+  { label: "Years in DevOps", value: "4+", hint: "Cloud & platform engineering" },
   { label: "AWS cost saved", value: "$8K/mo", hint: "32% reduction · 4 accounts" },
   { label: "Uptime SLA", value: "99.95%", hint: "EKS + Aurora Multi-AZ" },
   { label: "Microservices", value: "20+", hint: "Operated on production EKS" },

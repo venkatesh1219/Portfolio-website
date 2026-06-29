@@ -19,7 +19,7 @@ export default function ExperiencePage() {
       <PageHeader
         eyebrow="Experience"
         title="A track record of shipping platforms"
-        description="Eight years turning operational pain into self-service platforms across fintech, SaaS, and cloud-native organizations."
+        description="4+ years turning operational pain into self-service platforms across fintech, SaaS, and cloud-native organizations."
       />
 
       <section className="container-balanced py-12">

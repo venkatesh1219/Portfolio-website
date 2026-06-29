@@ -21,7 +21,7 @@ Merge fields: `{{first_name}}`, `{{company}}`, `{{trigger}}`, `{{portfolio_url}}
 ```
 Hi {{first_name}},
 
-I'm a Senior DevOps Engineer with 3+ years running production AWS + Kubernetes platforms, reaching out in case you're placing for remote or contract DevOps roles.
+I'm a Senior DevOps Engineer with 4+ years running production AWS + Kubernetes platforms, reaching out in case you're placing for remote or contract DevOps roles.
 
 Quick snapshot so you can match me fast:
 • Stack: AWS, EKS, Terraform, GitHub Actions/ArgoCD, Prometheus/Grafana
@@ -280,3 +280,20 @@ Happy to be on your bench. Proof: {{portfolio_url}}
 **What "good" looks like:** cold outreach reply rates are typically low single digits. 15–20 thoughtful sends/day for a few weeks, paired with the daily LinkedIn content (so you're not a stranger when you land in their inbox), is what turns into calls.
 
 **Compliance:** real sender identity, B2B-relevant, easy to opt out, honest claims. Don't scrape-and-blast — that burns your domain and your name.
+
+---
+---
+
+# Regions & time zones (US · UK · Europe · India)
+
+You're based in India (IST, UTC+5:30) and targeting US, UK, Europe, and India. Make the overlap a selling point, not a worry — say it plainly and humbly.
+
+**One line to drop into Touch 1 when the prospect is overseas:**
+> "I'm IST-based and used to overlapping with US and European teams — I keep 3–4 hours of daily overlap with your working hours, and I'm flexible on the rest."
+
+**Per-region notes:**
+- **US:** lead with cost ($8k/mo) and reliability — the metrics travel well. Best send window: their morning = your evening (7–9pm IST). Mention timezone overlap explicitly; it's the top remote-hire objection.
+- **UK / Europe:** strong overlap (your afternoon = their morning). Send 1–3pm IST. GDPR-aware security framing (least-privilege, secrets, audit) lands well here.
+- **India:** you can offer near-full overlap and on-site/hybrid optionality — say so. Referrals and product startups on AWS are the warmest segment.
+
+**Tone reminder (all regions):** humble and specific beats confident and generic. You're offering to be a useful second pair of eyes, not pitching a transformation. Every claim is one you can defend on a call. Never over-promise; "happy to help either way" is the close.

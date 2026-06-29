@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200">
+<rect width="1200" height="1200" fill="#0B1220"/>
+<rect x="40" y="40" width="1120" height="1120" rx="28" fill="#0F1A2E" stroke="#1E2A41" stroke-width="1.5"/>
+<rect x="40" y="40" width="10" height="1120" rx="5" fill="#3B82F6"/>
+<circle cx="1090" cy="150" r="220" fill="#3B82F6" opacity="0.06"/>
+<circle cx="1090" cy="150" r="140" fill="#3B82F6" opacity="0.05"/>
+<rect x="96" y="104" width="308" height="56" rx="28" fill="#3B82F6" opacity="0.16"/>
+<text x="250" y="140" font-family="DejaVu Sans, Arial, sans-serif" font-size="26" font-weight="bold" fill="#3B82F6" text-anchor="middle">Kubernetes / EKS</text>
+<text x="1104" y="132" font-family="DejaVu Sans Mono, monospace" font-size="30" font-weight="bold" fill="#F8FAFC" text-anchor="end">DAY 19</text>
+<text x="1104" y="166" font-family="DejaVu Sans Mono, monospace" font-size="22" fill="#94A3B8" text-anchor="end">/ 30 · Myth-buster</text>
+<text font-family="DejaVu Sans, Arial, sans-serif" font-size="92" font-weight="bold" fill="#F8FAFC"><tspan x="96" y="415">Kubernetes is</tspan><tspan x="96" y="525">overkill?</tspan></text>
+<rect x="96" y="640" width="64" height="6" rx="3" fill="#3B82F6"/>
+<text x="96" y="726" font-family="DejaVu Sans, Arial, sans-serif" font-size="40" font-weight="bold" fill="#3B82F6">Complexity is a budget, not a verdict</text>
+<line x1="96" y1="900" x2="1104" y2="900" stroke="#1E2A41" stroke-width="1.5"/>
+<text x="96" y="952" font-family="DejaVu Sans, Arial, sans-serif" font-size="34" font-weight="bold" fill="#F8FAFC">Venkatesh Sethumurugan</text>
+<text x="96" y="988" font-family="DejaVu Sans, Arial, sans-serif" font-size="25" fill="#94A3B8">Senior Cloud / DevOps Engineer</text>
+<text x="1104" y="970" font-family="DejaVu Sans Mono, monospace" font-size="23" fill="#3B82F6" text-anchor="end">venkatesh-portfolio-website.vercel.app</text>
+<rect x="96" y="1020" width="68" height="46" rx="23" fill="none" stroke="#1E2A41" stroke-width="1.5"/><text x="130" y="1050" font-family="DejaVu Sans, Arial, sans-serif" font-size="22" fill="#94A3B8" text-anchor="middle">AWS</text><rect x="180" y="1020" width="149" height="46" rx="23" fill="none" stroke="#1E2A41" stroke-width="1.5"/><text x="255" y="1050" font-family="DejaVu Sans, Arial, sans-serif" font-size="22" fill="#94A3B8" text-anchor="middle">Kubernetes</text><rect x="346" y="1020" width="138" height="46" rx="23" fill="none" stroke="#1E2A41" stroke-width="1.5"/><text x="414" y="1050" font-family="DejaVu Sans, Arial, sans-serif" font-size="22" fill="#94A3B8" text-anchor="middle">Terraform</text><rect x="499" y="1020" width="103" height="46" rx="23" fill="none" stroke="#1E2A41" stroke-width="1.5"/><text x="550" y="1050" font-family="DejaVu Sans, Arial, sans-serif" font-size="22" fill="#94A3B8" text-anchor="middle">GitOps</text><rect x="618" y="1020" width="68" height="46" rx="23" fill="none" stroke="#1E2A41" stroke-width="1.5"/><text x="652" y="1050" font-family="DejaVu Sans, Arial, sans-serif" font-size="22" fill="#94A3B8" text-anchor="middle">SRE</text>
+</svg>

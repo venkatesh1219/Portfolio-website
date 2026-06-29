@@ -1,6 +1,6 @@
 # 30 LinkedIn Posts — One Per Day
 > Voice: punchy hook → context → what I did → lesson → CTA. Real numbers only — defend them on a call.
-> Portfolio: https://venkatesh-portfolio-website.vercel.app/
+> Portfolio: https://venkatesh-sethumurugan-portfolio.vercel.app/
 > Best windows (IST + US tech): Tue–Thu, 8–10am or 7–9pm IST. Reply to every comment in the first 60–90 min.
 > Swap any bracketed [detail] for your specifics before posting.
 
@@ -8,7 +8,7 @@
 
 ## Day 1 — Intro / Open to work (P7 · Availability)
 
-3 years ago I was patching Linux servers by hand at 2am.
+4 years ago I was patching Linux servers by hand at 2am.
 
 Last year I cut an AWS bill by $8,000/month and kept a platform at 99.95% uptime.
 
@@ -26,9 +26,44 @@ So I'm going to do something useful with it: post one real lesson a day for 30 d
 If you're scaling on AWS or Kubernetes and infra is starting to hurt, follow along. And if you're hiring — let's talk.
 
 Everything I've built is here 👇
-https://venkatesh-portfolio-website.vercel.app/
+https://venkatesh-sethumurugan-portfolio.vercel.app/
 
 #DevOps #AWS #Kubernetes #OpenToWork #CloudEngineering
+
+---
+
+Four years ago, I was patching Linux servers by hand at 2 a.m., hoping nothing broke before sunrise.
+
+Last year, I helped reduce an AWS bill by **$8,000/month** while keeping a production platform at **99.95% uptime**.
+
+Today, as a Senior DevOps Engineer, I focus on building infrastructure that's reliable, scalable, and boring—in the best possible way.
+
+• Design AWS landing zones and multi-account platforms that scale
+• Run production Kubernetes (EKS) with 20+ microservices and zero-downtime deployments
+• Automate infrastructure using Terraform and GitOps
+• Build observability with Prometheus, Grafana, PagerDuty, and runbooks teams actually use
+
+I'm opening up to **remote roles, contract work, and freelance projects** over the next month.
+
+Rather than just updating my profile, I'm going to share something useful.
+
+For the next 30 days, I'll post one real lesson every day:
+
+* Production incidents I've debugged
+* AWS cost optimizations that saved real money
+* Kubernetes lessons learned
+* Mistakes I've made—and what they taught me
+
+If you're working on AWS or Kubernetes and infrastructure is becoming a bottleneck, follow along.
+
+And if you're hiring or need help with your cloud platform, I'd love to connect.
+
+Portfolio 👇
+https://venkatesh-sethumurugan-portfolio.vercel.app/
+
+#DevOps #AWS #Kubernetes #CloudEngineering #PlatformEngineering #OpenToWork
+
+
 
 ---
 
@@ -347,7 +382,7 @@ I'm open to **remote roles, contracts, and freelance work** right now. If your i
 What's the one thing a new DevOps hire should fix first?
 
 Portfolio + how to reach me 👇
-https://venkatesh-portfolio-website.vercel.app/
+https://venkatesh-sethumurugan-portfolio.vercel.app/
 
 #DevOps #AWS #Kubernetes #OpenToWork #Freelance
 
@@ -680,7 +715,7 @@ Now the clear ask. I'm a **Senior DevOps Engineer** open to **remote roles, cont
 If your infra is hurting — or you know someone hiring — let's talk. A 15-minute call costs you nothing and I'll tell you exactly what I'd look at first.
 
 Everything I've built, and how to reach me 👇
-https://venkatesh-portfolio-website.vercel.app/
+https://venkatesh-sethumurugan-portfolio.vercel.app/
 
 Where's the best place to find good contract DevOps work these days? Genuinely asking 👇
 

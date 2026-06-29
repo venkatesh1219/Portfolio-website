@@ -82,3 +82,17 @@ Either way, good luck with what you're building.
 3. Set `{{portfolio_url}}` to your live site.
 4. Don't send all four to the same person regardless of replies — stop the moment they respond.
 5. Keep it B2B and relevant; if they're clearly not a fit, skip rather than send.
+
+---
+
+## Regions & time zones (US · UK · Europe · India)
+
+IST-based, targeting US / UK / Europe / India. Treat the timezone question as a feature you address up front — humbly, in one line:
+
+> "I'm IST-based and comfortable overlapping with US/EU teams — I hold a few hours of daily overlap with your hours and stay flexible on the rest."
+
+- **US:** lead with the cost + reliability numbers; they're the universal language. Address overlap before they ask.
+- **UK / Europe:** your afternoon is their morning — emphasise the easy overlap.
+- **India:** offer near-full overlap and hybrid/on-site optionality; referrals are your warmest channel.
+
+Keep every DM humble and concrete. You're a calm, senior pair of hands offering to help — not selling a turnaround. One real number, one small ask, no over-promising.

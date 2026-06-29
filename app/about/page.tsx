@@ -59,7 +59,7 @@ export default function AboutPage() {
         <Reveal className="lg:col-span-2">
           <div className="space-y-5 text-pretty leading-relaxed text-muted-foreground">
             <p>
-              For <strong className="text-foreground">3+ years</strong> I&apos;ve
+              For <strong className="text-foreground">4+ years</strong> I&apos;ve
               worked at the seam between development and operations — building
               the cloud foundations, Kubernetes platforms, and delivery
               pipelines that let engineering teams scale without chaos.
